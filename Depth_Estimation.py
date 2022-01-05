@@ -42,21 +42,26 @@ def callback3(msg3): # class id
 
 def perspective(box):
     ## setting
+    print("join")
     returnw = 416
     returnh = 416
-    ##
-    Left_Top = [100,1]
-    Right_Top = [200,1]
-    Left_Bot = [100, 200]
-    Right_Bot = [200, 200]
-
-    ar1 = np.float32([[Left_Top],[Right_Top],[Left_Bot],[Right_Bot]])
-    ar2 = np.float32([0,0],[retrunw,0],[0,returnh],[returnw,returnh])
+    c2c = 100    #cone to cone real distance
+    
+    Left_Top = [120,0]
+    Right_Top = [520,0]
+    Left_Bot = [20, 480]
+    Right_Bot = [620, 480]
+    bbox = (box.x,box.y,1)
+    print(bbox)
+    ar1 = np.float32([[Left_Top], [Right_Top], [Left_Bot], [Right_Bot]])
+    ar2 = np.float32([[0,0],[returnw,0],[0,returnh],[returnw,returnh]])
     mtx = cv2.getPerspectiveTransform(ar1,ar2)
-
-    data = cv2.warpPerspective(box,mtx,(returnw,returnh))
-    pub.publish(data)
-
+    print(mtx)
+    data = np.dot(bbox,mtx)
+    pix_depth = returnh - data[1]/data[2]
+    depth= pix_depth*c2c/abs(Right_Bot[0]-Left_Bot[0])
+    pub.publish(depth)
+    print("test", depth)
 
 
 def listener():
