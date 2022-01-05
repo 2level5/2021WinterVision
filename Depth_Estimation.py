@@ -16,10 +16,10 @@ pub = rospy.Publisher('/depth', String , queue_size=1)
 
 def callback1(msg1): # bounding box
     try: ## no error = person detected
-        global box
         print("Bbox x: ", msg1.detections[int(PPP)].bbox.center.x)
         print("Bbox y: ", msg1.detections[int(PPP)].bbox.center.y)
         box=msg1.detections[int(PPP)].bbox.center
+        perspective(box)
     except: #error = no person. 
         print('No Person Detected')
     
@@ -40,7 +40,7 @@ def callback3(msg3): # class id
                 print("clss: ", msg3.data[i])
     #os.system('cls' if os.name =='nt' else 'clear')
 
-def perspective():
+def perspective(box):
     ## setting
     returnw = 416
     returnh = 416
